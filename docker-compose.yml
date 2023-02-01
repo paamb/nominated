@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - ./server/data/db:/var/lib/postgresql/something
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  backend:
+    container_name: nominate_backend
+    build:
+      context: ./server
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./server:/src/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - postgres
